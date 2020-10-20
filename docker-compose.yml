@@ -1,0 +1,27 @@
+version: "3"
+services:
+  yapi-mongo:
+    image: mongo:latest
+    container_name: yapi-mongo
+    volumes:
+      - ./data/db:/data/db
+    ports:
+      - "27017:27017"
+    network_mode: bridge
+    restart: unless-stopped
+  yapi-web:
+    build:
+      context: .
+    container_name: yapi-web
+    tty: true
+    volumes:
+      - ./my-yapi:/my-yapi
+    ports:
+      - "9090:9090"
+      - "3333:3000"
+    depends_on:
+      - yapi-mongo
+    external_links:
+      - yapi-mongo
+    network_mode: bridge
+    restart: unless-stopped
